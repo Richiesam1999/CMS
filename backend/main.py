@@ -70,7 +70,7 @@ class ContentItemResponse(BaseModel):
     category: str
     image_url: Optional[str]
     author: str
-    published: bool
+    published: Optional[bool]
     created_at: datetime
     updated_at: datetime
     event_date: Optional[datetime]
@@ -148,7 +148,7 @@ def create_content(
     """Create new content item with optional image"""
     
     # Validate category
-    valid_categories = ["blog", "event", "news"]
+    valid_categories = ["blogs", "events", "news"]
     if category not in valid_categories:
         raise HTTPException(status_code=400, detail=f"Category must be one of: {valid_categories}")
     
@@ -295,12 +295,12 @@ def delete_content(item_id: int, db: Session = Depends(get_db)):
 @app.get("/api/blogs", response_model=List[ContentItemResponse])
 def get_blogs(published: bool = True, limit: int = 20, offset: int = 0, db: Session = Depends(get_db)):
     """Get blog posts"""
-    return get_content(category="blog", published=published, limit=limit, offset=offset, db=db)
+    return get_content(category="blogs", published=published, limit=limit, offset=offset, db=db)
 
 @app.get("/api/events", response_model=List[ContentItemResponse])
 def get_events(published: bool = True, limit: int = 20, offset: int = 0, db: Session = Depends(get_db)):
     """Get events"""
-    return get_content(category="event", published=published, limit=limit, offset=offset, db=db)
+    return get_content(category="events", published=published, limit=limit, offset=offset, db=db)
 
 @app.get("/api/news", response_model=List[ContentItemResponse])
 def get_news(published: bool = True, limit: int = 20, offset: int = 0, db: Session = Depends(get_db)):
